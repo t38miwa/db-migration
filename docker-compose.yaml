@@ -1,0 +1,10 @@
+services:
+  postgres:
+    container_name: migration-db
+    image: postgres:17
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=migration_db

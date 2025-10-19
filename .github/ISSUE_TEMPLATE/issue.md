@@ -1,5 +1,6 @@
 ---
 name: Issue
+about: 問題や提案の報告
 title: ''
 labels: ''
 assignees: ''

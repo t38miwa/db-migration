@@ -1,3 +1,5 @@
+DB_URL := postgres://user:password@localhost:5434/migration_db?sslmode=disable
+
 .PHONY: up down connect migrate-diff migrate-apply migrate-status schema-diff schema-inspect migrate-lint
 
 # Docker operations
@@ -11,7 +13,7 @@ connect:
 	docker compose exec postgres psql -U user -d migration_db
 
 schema-diff:
-	atlas schema diff --env local --to file://schema.sql
+	atlas schema diff --env local --from ${DB_URL} --to file://schema.sql
 
 migrate-diff:
 	atlas migrate diff $(name) --env local
@@ -26,4 +28,7 @@ schema-inspect:
 	atlas schema inspect --env local
 
 migrate-lint:
-	atlas migrate lint --env local
+	atlas migrate lint --latest 1 --env local
+
+visualize-schema:
+	atlas schema inspect -u ${DB_URL} -w

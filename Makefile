@@ -1,6 +1,6 @@
 DB_URL := postgres://user:password@localhost:5434/migration_db?sslmode=disable
 
-.PHONY: up down connect migrate-diff migrate-apply migrate-apply-dry-run migrate-status migrate-down migrate-down-dry-run schema-diff schema-inspect migrate-lint
+.PHONY: up down connect migrate-diff migrate-apply migrate-apply-dry-run migrate-status migrate-down migrate-down-dry-run migrate-hash schema-diff schema-inspect migrate-lint
 
 # Docker operations
 up:
@@ -34,6 +34,9 @@ migrate-down:
 
 migrate-down-dry-run:
 	atlas migrate down $(amount) --dry-run --env local
+
+migrate-hash:
+	atlas migrate hash --env local
 
 schema-inspect:
 	atlas schema inspect --env local

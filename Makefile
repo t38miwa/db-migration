@@ -12,6 +12,7 @@ down:
 connect:
 	docker compose exec postgres psql -U user -d migration_db
 
+# atlas
 schema-diff:
 	atlas schema diff --env local --from ${DB_URL} --to file://schema.sql
 
@@ -32,3 +33,10 @@ migrate-lint:
 
 visualize-schema:
 	atlas schema inspect -u ${DB_URL} -w
+
+# sqruff
+lint: ## sqruffでlint
+	sqruff lint schema.sql
+	
+format: ## sqruffでフォーマット
+	sqruff fix schema.sql

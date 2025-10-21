@@ -4,5 +4,7 @@ CREATE TABLE "public"."users" (
   "name" text NOT NULL,
   "email" text NOT NULL,
   "age" integer NULL,
+  "address" text NULL,
+  "sports" text NULL,
   PRIMARY KEY ("id")
 );

@@ -56,4 +56,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ariga/setup-atlas@v0
-      - run: atlas migrate apply --env ci
+      - uses: ariga/atlas-action/migrate/test@v1
+        with:
+          dir: file://migrations
+          dev-url: postgres://user:password@localhost:5435/migration_db?sslmode=disable
+          run: "ci-test"

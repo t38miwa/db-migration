@@ -53,7 +53,3 @@ lint: ## sqruffでlint
 	
 format: ## sqruffでフォーマット
 	sqruff fix schema.sql
-
-# ci用
-migrate-test:
-	atlas migrate apply --env ci

@@ -3,5 +3,6 @@ CREATE TABLE users (
     name text NOT NULL,
     email text NOT NULL,
     age integer,
-    address text
+    address text,
+    sports text
 );

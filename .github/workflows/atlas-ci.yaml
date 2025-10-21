@@ -1,0 +1,74 @@
+name: Atlas CI
+
+on:
+  # migrations ディレクトリに変更がある PR のとき
+  pull_request:
+    paths:
+      - 'migrations/*'
+
+jobs:
+  lint:
+    name: Lint Migrations
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: migration_db
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 5
+  
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ariga/setup-atlas@v0
+      
+      - name: Install sqruff
+        uses: quarylabs/install-sqruff-cli-action@main
+      
+      - name: Run Atlas migrate lint
+        run: atlas migrate lint --latest 1 --env ci
+      
+      - name: Run sqruff lint
+        run: sqruff lint schema.sql
+
+  test:
+    name: Test Migrations
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: migration_db
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ariga/setup-atlas@v0
+
+      - name: Apply migrations to test database
+        run: atlas migrate apply --env ci
+
+      - name: Verify migration status
+        run: atlas migrate status --env ci
+      - name: Verify migration hashes
+        run: atlas migrate hash --env ci

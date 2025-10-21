@@ -32,9 +32,7 @@ jobs:
       - uses: ariga/setup-atlas@v0
       
       - name: Install sqruff
-        run: |
-          curl -L https://github.com/sqlfluff/sqlfluff/releases/latest/download/sqlfluff-linux64.tar.gz | tar -xz
-          sudo mv sqlfluff /usr/local/bin/
+        uses: quarylabs/install-sqruff-cli-action@main
       
       - name: Run Atlas migrate lint
         run: atlas migrate lint --latest 1 --env ci
@@ -75,3 +73,5 @@ jobs:
 
       - name: Verify migration status
         run: atlas migrate status --env ci
+      - name: Verify migration hashes
+        run: atlas migrate hash --env ci

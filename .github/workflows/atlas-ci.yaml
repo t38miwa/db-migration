@@ -1,0 +1,59 @@
+name: Atlas CI
+
+on:
+  # migrations ディレクトリに変更がある PR のとき
+  pull_request:
+    paths:
+      - 'migrations/*'
+
+jobs:
+  lint:
+    name: Lint Migrations
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: migration_db
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 5
+  
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ariga/setup-atlas@v0
+      - run: atlas migrate lint --env ci
+
+  test:
+    name: Test Migrations
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: migration_db
+        ports:
+          - 5435:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ariga/setup-atlas@v0
+      - run: make migrate-test

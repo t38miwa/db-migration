@@ -1,6 +1,4 @@
-DB_URL := postgres://user:password@localhost:5434/migration_db?sslmode=disable
-
-.PHONY: up down connect migrate-diff migrate-apply migrate-apply-dry-run migrate-status migrate-down migrate-down-dry-run migrate-hash schema-diff schema-inspect migrate-lint
+.PHONY: up down connect migrate-diff migrate-apply migrate-apply-dry-run migrate-test migrate-status migrate-down migrate-down-dry-run migrate-hash schema-diff schema-inspect migrate-lint
 
 # Docker operations
 up:
@@ -13,18 +11,20 @@ connect:
 	docker compose exec postgres psql -U user -d migration_db
 
 # atlas
-#現状のローカルDBと、schema.sqlとの差分を調べるコマンド
 schema-diff:
-	atlas schema diff --env local --from ${DB_URL} --to file://schema.sql
+	atlas schema diff \
+		--from "postgres://user:password@localhost:5434/migration_db?sslmode=disable" \
+		--to "file://schema.sql" \
+		--dev-url "docker://postgres/17/dev"
 
 migrate-diff:
 	atlas migrate diff $(name) --env local
 
-migrate-apply:
-	atlas migrate apply --env local
-
 migrate-apply-dry-run:
 	atlas migrate apply --dry-run --env local
+
+migrate-apply:
+	atlas migrate apply --env local
 
 migrate-status:
 	atlas migrate status --env local
@@ -53,3 +53,7 @@ lint: ## sqruffでlint
 	
 format: ## sqruffでフォーマット
 	sqruff fix schema.sql
+
+# ci用
+migrate-test:
+	atlas migrate apply --env ci

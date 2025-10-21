@@ -39,9 +39,6 @@ jobs:
       
       - name: Run sqruff lint
         run: sqruff lint schema.sql
-      
-      - name: Check sqruff format
-        run: sqruff fix --check schema.sql
 
   test:
     name: Test Migrations

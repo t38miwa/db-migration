@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ariga/setup-atlas@v0
-      - run: atlas migrate lint --env ci
+      - run: atlas migrate lint --latest 1 --ci local
 
   test:
     name: Test Migrations
@@ -56,4 +56,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ariga/setup-atlas@v0
-      - run: make migrate-test
+      - run: atlas migrate apply --env ci

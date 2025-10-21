@@ -27,3 +27,10 @@ env "ci" {
     }
   }
 }
+
+env "production" {
+  url = getenv("DATABASE_URL")
+  migration {
+    dir = "file://migrations"
+  }
+}

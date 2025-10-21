@@ -1,0 +1,34 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Migrations to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ariga/setup-atlas@v0
+
+      - name: Show pending migrations
+        run: atlas migrate status --env production
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Dry run migrations
+        run: atlas migrate apply --dry-run --env production
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Apply migrations to production
+        run: atlas migrate apply --env production
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Verify migration status
+        run: atlas migrate status --env production
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

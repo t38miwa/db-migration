@@ -5,6 +5,7 @@ env "local" {
 
   migration {
     dir = "file://migrations"
+    baseline = "20251022040505"
   }
   format {
     migrate {
@@ -29,8 +30,11 @@ env "ci" {
 }
 
 env "production" {
+  dev = "docker://postgres/17/dev"
   url = getenv("DATABASE_URL")
   migration {
     dir = "file://migrations"
+    revisions_schema = "public"
+    baseline = "20251022040505"
   }
 }

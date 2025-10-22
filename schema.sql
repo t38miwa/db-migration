@@ -15,3 +15,10 @@ CREATE TABLE posts (
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE categories (
+    id serial PRIMARY KEY,
+    name text NOT NULL UNIQUE,
+    description text,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP
+);

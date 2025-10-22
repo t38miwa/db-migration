@@ -45,7 +45,7 @@ migrate-lint:
 	atlas migrate lint --latest 1 --env local
 
 visualize-schema:
-	atlas schema inspect -u ${DB_URL} -w
+	atlas schema inspect --env local -w
 
 # sqruff
 lint: ## sqruffでlint
